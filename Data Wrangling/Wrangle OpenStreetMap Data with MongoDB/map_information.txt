@@ -1,0 +1,7 @@
+Map Area: Brooklyn, NY, USA.
+Mapzen:https://mapzen.com/data/metro-extracts/metro/brooklyn_new-york/
+Download:https://s3.amazonaws.com/metro-extracts.mapzen.com/brooklyn_new-york.osm.bz2
+
+Brooklyn is a city in New York state USA.
+
+Brooklyn is one of the cities I have always wanted to visit and I am going to use this project to learn more about brooklen, so when I finally get the chance to visit it, I will have a good idea of the city.
