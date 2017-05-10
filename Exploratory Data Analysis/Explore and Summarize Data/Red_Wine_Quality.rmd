@@ -1,0 +1,720 @@
+Red Wine Quality by Fahad Alhajjaj
+========================================================
+###Citation Request:  
+This dataset is public available for research.  
+The details are described in [Cortez et al., 2009].  
+Please include this citation if you plan to use this database:  
+  
+P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis.  
+Modeling wine preferences by data mining from physicochemical properties.  
+In Decision Support Systems, Elsevier, 47(4):547-553. ISSN: 0167-9236.  
+
+Available at:  
+[Elsevier](http://dx.doi.org/10.1016/j.dss.2009.05.016)  
+[Pre-press (pdf)](http://www3.dsi.uminho.pt/pcortez/winequality09.pdf)  
+[bib](http://www3.dsi.uminho.pt/pcortez/dss09.bib)  
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE,
+                      warning=FALSE,
+                      message=FALSE,
+                      fig.width=12,
+                      fig.height=8)
+```
+
+```{r packages}
+library(ggplot2)
+library(gridExtra)
+library(knitr)
+library(GGally)
+```
+
+```{r Load_the_Data}
+# Load the Data
+red_wine <- read.csv("wineQualityReds.csv")
+ # droping the first column which is an index of the instances
+red_wine$X <- NULL
+
+#Changing the quality values to letters to better visualize the quality
+red_wine$quality.class <- chartr('0123456789', 'KJIHGFEDCB', red_wine$quality)
+```
+
+In this report a dataset of 1599 red wine instances, each with 12 vriables  
+discribing the instance, is to be explored. A list of the 12 variables:  
+  1. fixed acidity (tartaric acid - g / dm^3)  
+  2. volatile acidity (acetic acid - g / dm^3)  
+  3. citric acid (g / dm^3)  
+  4. residual sugar (g / dm^3)  
+  5. chlorides (sodium chloride - g / dm^3)  
+  6. free sulfur dioxide (mg / dm^3)  
+  7. total sulfur dioxide (mg / dm^3)  
+  8. density (g / cm^3)  
+  9. pH  
+ 10. sulphates (potassium sulphate - g / dm3)  
+ 11. alcohol (% by volume)  
+ 12. quality (score between 0 and 10)  
+
+# Univariate Plots Section
+
+```{r Summary_of_the_variables}
+dim(red_wine)
+str(red_wine)
+summary(red_wine)
+```
+
+The dataset has 1599 observation with 12 discribtive variables.  
+This a statestical summary of all variables is shown above and will be used  
+as referance and to understand the variables better
+
+```{r Univariate_Plots_1, }
+p1 <- ggplot(aes(x = fixed.acidity), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.1) +
+  xlab('Fixed Acidity') +
+  ylab('Count') +
+  ggtitle('Fixed Acidity Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+p2 <- ggplot(aes(x = volatile.acidity), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.01) +
+  xlab('Volatile Acidity') +
+  ylab('Count') +
+  ggtitle('Volatile Acidity Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+grid.arrange(p1, p2, ncol = 1)
+```
+
+We see in the above histograms:  
+Fixed acidity has a normal distribution with a median 7.90 and a mean 8.32.  
+Volatile Acidity has a normal distribution with median 0.5200 and mean 0.5278.  
+The x-axis is different in both histograms due to the quantity of the two acids.
+
+```{r Univariate_Plots_2}
+ggplot(aes(x = citric.acid), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.01) +
+  xlab('Citric Acid') +
+  ylab('Count') +
+  ggtitle('Citric Acid Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We see in the above histogram Citric Acid has two long bins at 0 and at 0.48  
+Also, Citric Acid has a median 0.260 and a mean 0.271.  
+
+```{r Univariate_Plots_3}
+ggplot(aes(x = residual.sugar), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.1) +
+  scale_x_log10() +
+  xlab('Residual Sugar') +
+  ylab('Count') +
+  ggtitle('Residual Sugar Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+```
+
+We see in the above histogram for Residual Sugar has long tail due to outliers.  
+The Residual Sugar has a median 2.200 and a mean 2.539  
+
+```{r Univariate_Plots_4}
+p3 <- ggplot(aes(x = chlorides), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.001) +
+  xlab('Chlorides') +
+  ylab('Count') +
+  ggtitle('Chlorides Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+p4 <- ggplot(aes(x = chlorides), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.001) +
+  coord_cartesian(xlim = c(0.025, 0.125)) +
+  xlab('Chlorides') +
+  ylab('Count') +
+  ggtitle('Chlorides Histogram - with limited x-axis') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+grid.arrange(p3, p4, ncol = 1)
+```
+
+In the above Chlorides Histogram we zoomed in to better understand the graph.  
+Chlorides Histogram has long tail due to outliers.  
+The Chlorides has a median 0.07900 and a mean 0.08747  
+
+```{r Univariate_Plots_5}
+ggplot(aes(x = free.sulfur.dioxide), data = red_wine) +
+  geom_histogram(fill = 'orange', binwidth = 1) +
+  xlab('Free Sulfur Dioxide') +
+  ylab('Count') +
+  ggtitle('Free Sulfur Dioxide Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+ggplot(aes(x = total.sulfur.dioxide), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 1) +
+  xlab('Total Sulfur Dioxide') +
+  ylab('Count') +
+  ggtitle('Total Sulfur Dioxide Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+ggplot() +
+  geom_histogram(aes(x = free.sulfur.dioxide),
+                 data = red_wine,
+                 fill = 'orange',
+                 binwidth = 1) +
+  
+  geom_histogram(aes(x = total.sulfur.dioxide),
+                 data = red_wine,
+                 fill = 'blue',
+                 binwidth = 1) +
+  
+  xlab('Free and Total Sulfur Dioxide') +
+  ylab('Count') +
+  ggtitle('Free and Total Sulfur Dioxide Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+In the above histograms we started with the Free Sulfur Dioxide Histogram,  
+then we did the Total Sulfur Dioxide Histogram, then we combined them togather  
+since the Free Sulfur Dioxide is part of the Total Sulfur Dioxide.  
+We noticed that the Free Sulfur Dioxide is mostly in the low levels of the gas.  
+The Free Sulfur Dioxide has a median 14.00 and a mean 15.87.  
+The Total Sulfur Dioxide has a median 38.00 and a mean 46.47.   
+
+```{r Univariate_Plots_6}
+ggplot(aes(x = density), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.0001) +
+  xlab('Density') +
+  ylab('Count') +
+  ggtitle('Density Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+In the above Density Histogram, Density has a normal distribution  
+with median 0.9968 and mean 0.9967.  
+
+```{r Univariate_Plots_7}
+ggplot(aes(x = pH), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.01) +
+  xlab('pH') +
+  ylab('Count') +
+  ggtitle('pH Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+In the above pH Histogram, pH has a normal distribution  
+with median 3.310 and mean 3.311.   
+
+```{r Univariate_Plots_8}
+ggplot(aes(x = sulphates), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.01) +
+  xlab('Sulphates') +
+  ylab('Count') +
+  ggtitle('Sulphates Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We see in the above histogram for Sulphates has long tail due to outliers.  
+The Sulphates has a median 0.6200 and a mean 0.6581. 
+
+```{r Univariate_Plots_9}
+ggplot(aes(x = alcohol), data = red_wine) +
+  geom_histogram(fill = 'blue', binwidth = 0.1) +
+  xlab('Alcohol') +
+  ylab('Count') +
+  ggtitle('Alcohol Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We see in the above histogram for Alcohol has a Positively-skewed distribution.  
+The Alcohol has a median of 10.20 and a mean of 10.42.  
+
+```{r Univariate_Plots_10}
+ggplot(aes(x = quality.class), data = red_wine) +
+  geom_bar(color = 'black', fill = 'blue') +
+  xlab('Quality') +
+  ylab('Count') +
+  ggtitle('Quality Histogram') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We see in the above histogram for Quality normal distribution.  
+The Quality has a median of 6.000 and a mean of 5.636.  
+We see most wines score a 5 or 6 in quality.  
+
+# Univariate Analysis
+
+### What is the structure of your dataset?
+There is 1599 red wine instances with 12 features:  
+(fixed.acidity, volatile.acidity, citric.acid, residual.sugar, chlorides,  
+free.sulfur.dioxide, total.sulfur.dioxide, density, pH, sulphates, alcohol,  
+quality). There is only one ordered variable, quality and quality.class.  
+
+(worst score) -----------> (best score)  
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10  
+    K, J, I, H, G, F, E, D, C, B, A  
+  
+Other observations:  
+* All wine instances score between 3 and 8.  
+* Both Residual Sugar and Chlorides have long tails.  
+* Minumum Alcohol % is 8.40 and Maximum Alcohol % is 14.90  
+
+### What is/are the main feature(s) of interest in your dataset?
+The main features of interest in the dataset are fixed acidity and quality.  
+I'd like to see how the other variables effect the these two features.
+
+### What other features in the dataset do you think will help support your \
+investigation into your feature(s) of interest?
+All other variables would help. Density and pH would have the a relation with  
+fixed acidity. The fixed acidity, volatile.acidity, alcohol would have the  
+most effect on quality.  
+
+### Did you create any new variables from existing variables in the dataset?
+No.  
+
+### Of the features you investigated, were there any unusual distributions? \
+Did you perform any operations on the data to tidy, adjust, or change the form \
+of the data? If so, why did you do this?  
+Residual Sugar and Chlorides have long tails when I graphed them.  
+I zoomed in when I plot Chlorides Histogram to better understand the graph  
+because it had a long tail.  
+
+I applied some a transformation on the Residual Sugar it is heavily right skewed.  
+I took my reviewer advice on this matter.
+
+I added a new variable called 'quality.class', I converted quality scale to  
+quality class by converting numbers (0 to 10) to letters (A - K) to better  
+understand and visualies the quality.
+
+# Bivariate Plots Section
+
+```{r Bivariate_Plots_1}
+ggpairs(data = red_wine,
+        lower = list(continuous = wrap(ggally_points,
+                                       size = 0.75,
+                                       color = "blue",
+                                       alpha = 0.05)))
+```
+
+This is an overview of the Bivaritate plots. It is used to better choose the  
+graphs and to understand the relationship between variables.
+
+```{r Bivariate_Plots_2}
+ggplot(aes(x = fixed.acidity, y = citric.acid), data = red_wine) +
+  geom_point(color = 'red',
+             alpha = 0.50) +
+  stat_smooth(method= 'lm', color = 'blue') +
+  xlab('Fixed Acidity') +
+  ylab('Citric Acid') +
+  ggtitle('Fixed Acidity vs. Citric Acid') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$fixed.acidity, red_wine$citric.acid)
+```
+
+We see a positive correlation between Fixed Acidity and Citric Acid.  
+The Pearson's product-moment correlation is 0.6717034.
+
+```{r Bivariate_Plots_3}
+ggplot(aes(x = fixed.acidity, y = density), data = red_wine) +
+  geom_point(color = 'red',
+             alpha = 0.50) +
+  xlab('Fixed Acidity') +
+  ylab('Density') +
+  ggtitle('Fixed Acidity vs. Density') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$fixed.acidity, red_wine$density)
+```
+
+We see a positive correlation between Fixed Acidity and Density.  
+The Pearson's product-moment correlation is 0.6680473.  
+
+```{r Bivariate_Plots_4}
+ggplot(aes(x = fixed.acidity, y = pH), data = red_wine) +
+  geom_point(color = 'red',
+             alpha = 0.50) +
+  xlab('Fixed Acidity') +
+  ylab('pH') +
+  ggtitle('Fixed Acidity vs. pH') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$fixed.acidity, red_wine$pH)
+```
+
+We see a negative correlation between Fixed Acidity and pH.  
+The Pearson's product-moment correlation is -0.6829782.
+
+```{r Bivariate_Plots_5}
+ggplot(aes(x = fixed.acidity, y = alcohol), data = red_wine) +
+  geom_point(color = 'red',
+             alpha = 0.50) +
+  xlab('Fixed Acidity') +
+  ylab('Alcohol') +
+  ggtitle('Fixed Acidity vs. Alcohol') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$fixed.acidity, red_wine$alcohol)
+```
+
+We see almost no correlation between Fixed Acidity and Alcohol.  
+The Pearson's product-moment correlation is -0.06166827.
+
+```{r Bivariate_Plots_6}
+ggplot(aes(x = volatile.acidity, y = citric.acid), data = red_wine) +
+  geom_point(color = 'red',
+             alpha = 0.50) +
+  xlab('Volatile Acidity') +
+  ylab('Citric Acid') +
+  ggtitle('Volatile Acidity vs. Citric Acid') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$volatile.acidity, red_wine$citric.acid)
+```
+
+On the other hand, We see a negative correlation between Volatile Acidity and  
+Citric Acid. The Pearson's product-moment correlation is -0.5524957.  
+
+```{r Bivariate_Plots_7}
+ggplot(aes(x = quality.class, y = alcohol), data = red_wine) +
+  geom_boxplot() + 
+  xlab('Quality') +
+  ylab('Alcohol') +
+  ggtitle('Quality vs. Alcohol') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$quality, red_wine$alcohol)
+```
+
+We see a positive correlation between Quality and Alcohol.  
+The Pearson's product-moment correlation is 0.4761663.  
+
+```{r Bivariate_Plots_8}
+ggplot(aes(x = quality.class, y = volatile.acidity), data = red_wine) +
+  geom_boxplot() + 
+  xlab('Quality') +
+  ylab('Volatile Acidity') +
+  ggtitle('Quality vs. Volatile Acidity') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$quality, red_wine$volatile.acidity)
+```
+
+We see some negative correlation between Quality and Volatile Acidity  
+The Pearson's product-moment correlation is -0.3905578.
+
+```{r Bivariate_Plots_9}
+ggplot(aes(x = quality.class, y = pH), data = red_wine) +
+  geom_boxplot() +
+  xlab('Quality') +
+  ylab('pH') +
+  ggtitle('Quality vs. pH') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$quality, red_wine$pH)
+```
+
+We almost see no correlation between Quality and pH  
+The Pearson's product-moment correlation is -0.05773139.  
+
+```{r Bivariate_Plots_10}
+ggplot(aes(x = quality.class, y = fixed.acidity), data = red_wine) +
+  geom_boxplot() + 
+  xlab('Quality') +
+  ylab('Fixed Acidity') +
+  ggtitle('Quality vs. Fixed Acidity') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+cor.test(red_wine$quality, red_wine$fixed.acidity)
+```
+
+We almost see no correlation between Quality and Fixed Acidity  
+The Pearson's product-moment correlation is 0.1240516.
+
+# Bivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the \
+investigation. How did the feature(s) of interest vary with other features in \
+the dataset?  
+We saw some positive, negative and no correlation between the features of  
+interest and other features.  
+
+We saw positive correlations between:  
+Fixed Acidity and Citric Acid  
+Fixed Acidity and Density
+Quality and Alcohol
+
+We saw negative correlations between:  
+Fixed Acidity and pH  
+Volatile Acidity and Citric Acid  
+Quality and Volatile Acidity  
+
+We saw no correlations between:  
+Fixed Acidity and Alcohol.  
+Quality and pH
+
+### Did you observe any interesting relationships between the other features \
+(not the main feature(s) of interest)?
+Yes, We see a negative correlation between Volatile Acidity and
+Citric Acid. The Pearson?s product-moment correlation is -0.5524957.  
+That was interesting.
+
+### What was the strongest relationship you found?
+There was three strong relationships in the dataset:  
+Fixed Acidity and Citric Acid (positive relation - pearson's correlation = 0.67)  
+Fixed Acidity and Density (positive relation - pearson's correlation = 0.67)  
+Fixed Acidity and pH (negative relation - pearson's correlation =  -0.68)  
+
+# Multivariate Plots Section
+
+```{r Multivariate_Plots_1}
+ggplot(aes(x = fixed.acidity, y = alcohol), data = red_wine) + 
+  geom_point(aes(color = quality.class),
+             size = 2) +
+  scale_color_brewer(type = 'div',
+                     palette = "RdYlBu",
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  theme_dark() +
+  xlab('Fixed Acidity') +
+  ylab('Alcohol') +
+  ggtitle('Fixed Acidity vs. Alcohol') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We see some positive coorelation with consentration in low values of x and y.
+We also see that quality wine gets better as the x and y values increases.
+
+```{r Multivariate_Plots_2}
+ggplot(aes(x = fixed.acidity, y = pH), data = red_wine) + 
+  geom_point(aes(color = quality.class),
+             size = 2) +
+  scale_color_brewer(type = 'div',
+                     palette = 'RdYlBu',
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  theme_dark() +
+  xlab('Fixed Acidity') +
+  ylab('pH') +
+  ggtitle('Fixed Acidity vs. pH') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We are see some negative coorelation between Fixed Acidity vs. pH  
+We also quality is scttered all over the graph.
+
+```{r Multivariate_Plots_3}
+ggplot(aes(x = fixed.acidity, y = density), data = red_wine) +
+  geom_point(aes(color = quality.class),
+             size = 2) +
+  scale_color_brewer(type = 'div',
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  theme_dark() +
+  xlab('Fixed Acidity') +
+  ylab('Density') +
+  ggtitle('Fixed Acidity vs. Density') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We see a positive correlation between Fixed Acidity and Density.  
+We mostly see the higher guality wines are lower than the lower quality wine.
+
+```{r Multivariate_Plots_4}
+ggplot(aes(x = fixed.acidity, y = citric.acid),
+       data = red_wine) + 
+  geom_point(aes(color = quality.class),
+             size = 2) +
+  scale_color_brewer(type = 'div',
+                     palette = 'RdYlBu',
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  theme_dark() +
+  xlab('Fixed Acidity') +
+  ylab('Citric Acid') +
+  ggtitle('Fixed Acidity vs. Citric Acid') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+We some positive correlation between Fixed Acidity/Volatile Acidity and  
+Citric Acid. Also, we can see some overlabing in the lower x and y values.
+We also see that quality wine gets better as the x and y values increases.
+
+```{r Multivariate_Plots_5}
+ggplot(aes(x = quality.class, y = fixed.acidity/volatile.acidity),
+       data = red_wine) + 
+  geom_boxplot() +
+  scale_color_brewer(type = 'div',
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  xlab('Quality') +
+  ylab('Fixed Acidity/Volatile Acidity') +
+  ggtitle('Fixed Acidity/Volatile Acidity vs. Quality') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+```
+
+The lower the quality the smaller the quantile boxes.
+
+# Multivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the \
+investigation. Were there features that strengthened each other in terms of \
+looking at your feature(s) of interest?  
+There was no relation between Fixed Acidity and Alcohol. However, when we  
+plotted the ration of Fixed Acidity over Volatile Acidity and Alcohol  
+we saw a positive coorelation.
+
+### Were there any interesting or surprising interactions between features?
+Yes, the ration of Fixed Acidity over Volatile Acidity has some intersting  
+results when plotted with other features.  
+
+### OPTIONAL: Did you create any models with your dataset? Discuss the \
+strengths and limitations of your model.
+
+------
+
+# Final Plots and Summary
+
+### Plot One
+```{r Plot_One}
+ggplot(aes(x = fixed.acidity, y = citric.acid), data = red_wine) +
+  geom_point(aes(color = quality.class),
+             size = 3) +
+  scale_color_brewer(type = 'div',
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  theme_dark() +
+  coord_cartesian(xlim= c(min(red_wine$fixed.acidity),
+                          quantile(red_wine$fixed.acidity, 0.99))) +
+  stat_smooth(method= 'lm', color = 'red') +
+  xlab('Fixed Acidity (g/dm^3)') +
+  ylab('Citric Acid (g/dm^3)') +
+  ggtitle('Fixed Acidity vs. Citric Acid vs. Quality') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+print('Fixed Acidity (g/dm^3) Statistics')
+summary(red_wine$fixed.acidity)
+
+print('Citric Acid (g/dm^3) Statistics')
+summary(red_wine$citric.acid)
+
+print('Quality Statistics')
+summary(red_wine$quality)
+cor.test(red_wine$fixed.acidity, red_wine$citric.acid)
+```
+
+### Description One  
+We see a positive correlation between Fixed Acidity and Citric Acid.  
+The Pearson's product-moment correlation is 0.6717034.
+Most of the higher quality wines (C-D) are above the regression line while  
+the lower quality (G-H) are below the regression line. However, quality wine   
+(E-F) are above and below the regression line. The points are scattered evenly  
+through the graph. I chose this graph because I wanted to see how the quality  
+is scattered in this graph. I was not surprised when I saw how quality was
+scattered in the graph. I droped the top 1 % of Fixed Acidity data because there  
+was some gaps in the values. 
+
+### Plot Two
+```{r Plot_Two}
+ggplot(aes(x = fixed.acidity, y = density), data = red_wine) +
+  geom_point(aes(color = quality.class),
+             size = 3) +
+  scale_color_brewer(type = 'div',
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  theme_dark() +
+  coord_cartesian(xlim= c(min(red_wine$fixed.acidity),
+                          quantile(red_wine$fixed.acidity, 0.99))) +
+  stat_smooth(method= 'lm', color = 'red') +
+  xlab('Fixed Acidity (g/dm^3)') +
+  ylab('Density (g/cm^3)') +
+  ggtitle('Fixed Acidity vs. Density vs. Quality') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+print('Fixed Acidity (g/dm^3) Statistics')
+summary(red_wine$fixed.acidity)
+
+print('Density (g/cm^3) Statistics')
+summary(red_wine$density)
+
+print('Quality Statistics')
+summary(red_wine$quality)
+cor.test(red_wine$fixed.acidity, red_wine$density)
+```
+
+### Description Two
+We see a positive correlation between Fixed Acidity and Density.  
+The Pearson's product-moment correlation is 0.6680473.  
+Most of the higher quality wines (C-D) are below the regression line while  
+the lower quality (G-H) are along the regression line. However, quality wine   
+(E-F) are above and below the regression line where (F) is mostly above the line.  
+The points are scattered nicely in the graph. I chose this graph because   
+I wanted to see how the quality is scattered in this graph. I was not surprised  
+when I saw how quality was scattered in the graph. I droped the top 1 % of Fixed  
+Acidity data because there was some gaps in the values. 
+
+### Plot Three
+```{r Plot_Three}
+ggplot(aes(x = fixed.acidity, y = alcohol), data = red_wine) + 
+  geom_point(aes(color = quality.class),
+             size = 3) +
+  scale_color_brewer(type = 'div',
+                     guide = guide_legend(title = 'Quality',
+                                          reverse = FALSE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 2))) +
+  theme_dark() +
+  coord_cartesian(xlim= c(min(red_wine$fixed.acidity),
+                          quantile(red_wine$fixed.acidity, 0.99))) +
+  stat_smooth(method= 'lm', color = 'red') +
+  xlab('Fixed Acidity (g/dm^3)') +
+  ylab('Alcohol (% by volume)') +
+  ggtitle('Fixed Acidity vs. Alcohol vs. Quality') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+print('Fixed Acidity (g/dm^3) Statistics')
+summary(red_wine$fixed.acidity)
+
+print('Alcohol (% by volume) Statistics')
+summary(red_wine$alcohol)
+
+print('Quality Statistics')
+summary(red_wine$quality)
+cor.test(red_wine$fixed.acidity, red_wine$alcohol)
+
+```
+
+### Description Three
+We see almost no correlation between Fixed Acidity and Alcohol.  
+The Pearson's product-moment correlation is -0.06166827.  
+Most of the higher quality wines (C-D) are above the regression line while  
+the lower quality (F-H) are below the regression line. Quality wine (E), on the   
+other hand, is scattered everywhere. The points are scattered nicely in the graph.  
+I chose this graph because I was fascinated by how alcohol has an effect on quality  
+I was surprised when I saw how quality was scattered in the graph. I did some  
+limitiation on the x-axis by taking out the top 1% of the values.  
+
+------
+# Reflection
+I this project I worked on Red Wine Quality dataset.  
+The dataset has 1599 observations and 12 variables. I started by including a  
+new variable for quality class (A - K) converted from quality measure (0-10).  
+Then I started to examin each variable to better understand the dataset.  
+
+There was some coorelation between variables, some were positive and some were  
+negative. Some relations were obviouse, such as Fixed Acidity and pH, and some  
+were surprising to me, such as Fixed Acidity and Alcohol.  
+
+Some limition in the dataset were the number of observations.  
+The more observations we have the better understanding and exploration of the  
+dataset. To explore the dataset further, I would try and find the realstionship  
+between all features and the quality feature to be able to predict the quality  
+of a specific wine.  

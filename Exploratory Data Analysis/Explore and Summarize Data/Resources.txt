@@ -1,0 +1,7 @@
+Resources:
+Udacity.com
+Example project.
+Data File description.
+https://rstudio.github.io/dygraphs/r-markdown.html
+http://stackoverflow.com/questions/23117096/convert-numbers-to-letters
+Reviewer FeedBack 
