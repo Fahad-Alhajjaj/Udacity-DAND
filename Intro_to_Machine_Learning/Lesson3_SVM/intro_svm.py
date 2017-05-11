@@ -28,8 +28,8 @@ print "training time:", round(time()-t0, 3), "s"
 
 #### store your predictions in a list named pred
 t0 = time()
-prediction = clf.predict(features_test)
-print "prediction time:", round(time()-t0, 3), "s"
+pred = clf.predict(features_test)
+print "pred time:", round(time()-t0, 3), "s"
 
 from sklearn.metrics import accuracy_score
 acc = accuracy_score(pred, labels_test)
