@@ -3,10 +3,12 @@
 import matplotlib.pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
+from time import time
+from sklearn.metrics import accuracy_score
 
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 
-
+'''
 ### the training data (features_train, labels_train) have both "fast" and "slow"
 ### points mixed together--separate them so we can give them different colors
 ### in the scatterplot and identify them visually
@@ -26,17 +28,20 @@ plt.xlabel("bumpiness")
 plt.ylabel("grade")
 plt.show()
 ################################################################################
-
+'''
 
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
-
-
-
-
-
-
-
+from sklearn.ensemble import RandomForestClassifier as RFC
+clf = RFC(n_estimators= 3, criterion= 'gini', max_features= None, min_samples_split= 5)
+t0 = time()
+clf.fit(features_train, labels_train)
+train_time = round(time()-t0, 3)
+t0 = time()
+pred = clf.predict(features_test)
+pred_time = round(time()-t0, 3)
+acc = accuracy_score(pred, labels_test)
+print train_time, ' | ', pred_time, ' | ', (train_time+pred_time), ' | ', acc
 
 try:
     prettyPicture(clf, features_test, labels_test)
