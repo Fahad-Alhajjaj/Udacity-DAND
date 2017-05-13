@@ -21,18 +21,18 @@ def run_clf(clf, n, c, mf, mss, counter):
 
 def rf_opt():
 	counter = 1
-	'''
-	for n in range(1,100):
+	for n in range(10, 100, 10):
 		for c in ['gini', 'entropy']:
 			for mf in ['sqrt', 'log2', None]:
-				for mss in range(2,100):
+				for mss in range(40, 100, 10):
 						clf = RFC(n_estimators= n, criterion= c, max_features= mf, min_samples_split= mss)
 						run_clf(clf, n, c, mf, mss, counter)
 						counter+=1
-	'''
 	clf = RFC(n_estimators= 15, criterion= 'gini', max_features= None, min_samples_split= 35)
 	run_clf(clf, 15, 'gini', None, 35, counter)
 	print 'Best Total Time'
 	display((Classifiers_df.sort_values(by= 'Total', ascending=[1])).head(5))
 	print 'Best Accuracy'
 	display((Classifiers_df.sort_values(by= 'Accuracy', ascending=[0])).head(5))
+#n_estimators criterion max_f  min_samples  Train   Pred  Total  Accuracy
+#        40.0   entropy  log2         40.0  0.112  0.084  0.196  0.849829

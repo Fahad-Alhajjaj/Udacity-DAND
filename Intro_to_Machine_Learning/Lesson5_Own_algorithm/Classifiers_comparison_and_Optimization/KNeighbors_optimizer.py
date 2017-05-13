@@ -21,7 +21,6 @@ def run_clf(clf, nb, w, a, ls, counter):
 
 def kn_opt():
 	counter = 1
-	'''
 	for nb in range(1,100):
 		for w in ['uniform', 'distance']:
 			for a in ['auto', 'ball_tree', 'kd_tree', 'brute']:
@@ -29,10 +28,9 @@ def kn_opt():
 						clf = KNC(n_neighbors= nb, weights= w , algorithm= a, leaf_size= ls)
 						run_clf(clf, nb, w, a, ls, counter)
 						counter+=1
-	'''
-	clf = KNC(n_neighbors= 10, weights= 'uniform' , algorithm= 'ball_tree', leaf_size= 50)
-	run_clf(clf, 10, 'uniform', 'ball_tree', 50, counter)
 	print 'Best Total Time'
 	display((Classifiers_df.sort_values(by= 'Total', ascending=[1])).head(5))
 	print 'Best Accuracy'
 	display((Classifiers_df.sort_values(by= 'Accuracy', ascending=[0])).head(5))
+
+	display(Classifiers_df[Classifiers_df['Accuracy'] >= 85].sort_values(by= 'Total', ascending=[1]))
