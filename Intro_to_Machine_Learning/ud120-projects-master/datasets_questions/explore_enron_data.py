@@ -9,15 +9,18 @@ from feature_format import *
 
 a = 0
 b = 0
+c = 0
+
 for item in enron_data:
 	for k, v in enron_data[item].items():
-		if k == 'total_payments':
-			if v == 'NaN':
-				a+=1
-			else:
-				b+=1
+		if k == 'poi':
+			if v:
+				c+=1
+				print enron_data[item]['total_payments']
+				if enron_data[item]['total_payments'] == 'NaN':
+					b+=1
 
-print a, ' | ', b
+print a, ' | ', b, ' | ', c
 '''
 salary
 to_messages
