@@ -43,13 +43,41 @@ data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r")
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
 
+from sklearn.preprocessing import MinMaxScaler
+scale1 = MinMaxScaler()
+scale2 = MinMaxScaler()
+
+sal_arr = []
+eso_arr = []
+for user in data_dict:
+    val = data_dict[user]['salary']
+    if val == 'NaN':
+        continue
+    sal_arr.append(float(val))
+    val = data_dict[user]['exercised_stock_options']
+    if val == 'NaN':
+        continue
+    eso_arr.append(float(val))
+
+sal_arr = [min(sal_arr), 200000.0, max(sal_arr)]
+eso_arr = [min(eso_arr), 1000000.0, max(eso_arr)]
+sal_arr = numpy.array([[x] for x in sal_arr])
+eso_arr = numpy.array([[x] for x in eso_arr])
+
+salary = scale1.fit_transform(sal_arr)
+stock = scale2.fit_transform(eso_arr)
+
+print salary, stock
+
+'''
 
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
+feature_3 = "total_payments"
 poi  = "poi"
-features_list = [poi, feature_1, feature_2]
+features_list = [poi, feature_1, feature_2, feature_3]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
 
@@ -58,13 +86,16 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
-for f1, f2 in finance_features:
+for f1, f2, _ in finance_features:
     plt.scatter( f1, f2 )
 plt.show()
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
-
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(data)
+pred = kmeans.predict(data)
 
 
 
@@ -74,3 +105,6 @@ try:
     Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
 except NameError:
     print "no predictions object named pred found, no clusters to plot"
+
+
+'''
