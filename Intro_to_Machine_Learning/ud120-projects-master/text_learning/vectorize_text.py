@@ -40,11 +40,12 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        path = path.replace("/", "\\")
-        path = path.replace(".", "_")
+        #path = path.replace("/", "\\")
+        #path = path.replace(".", "_")
         # temp_counter += 1
         # if temp_counter < 200:
-        path = os.path.join('C:\Users\\fedof\Udacity\DataScience\\', path[:-1])
+        #'C:\Users\\fedof\Udacity\DataScience\\'
+        path = os.path.join('/Users/yousef/Udacity/', path[:-1])
         #print path
         email = open(path, "r")
 
@@ -52,7 +53,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         stemmed_text = parseOutText(email)
         ### use str.replace() to remove any instances of the words
         ### ["sara", "shackleton", "chris", "germani"]
-        signature_words = ["sara", "shackleton", "chris", "germani"]
+        signature_words = ["sara", "shackleton", "chris", "germani", "sshacklensf", "cgermannsf"]
         for word in signature_words:
             stemmed_text = stemmed_text.replace(word, "")
         ### append the text to word_data
