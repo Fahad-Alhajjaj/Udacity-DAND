@@ -46,12 +46,11 @@ clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 acc = accuracy_score(pred, labels_test)
 
-#print acc
+print 'Accuracy: ', acc
 
 importance = clf.feature_importances_
 
 for i in range(0, len(importance)):
-	print i
 	if importance[i] > 0.2:
 		print importance[i]
 		print feature_names[i]
