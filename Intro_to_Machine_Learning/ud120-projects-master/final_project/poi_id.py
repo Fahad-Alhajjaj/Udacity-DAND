@@ -29,13 +29,23 @@ features_list = ['poi',
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
-
-#import pprint
-
+import pprint
+'''
 i=0
-for k in data_dict.keys():
+temp = ''
+for key in data_dict.keys():
 	i+=1
-print i
+	temp = key
+	pprint.pprint(data_dict[temp])
+	if i > 0:
+		break
+'''
+for key in data_dict.keys():
+	for k in data_dict[key].keys():
+		if k not in features_list:
+			del data_dict[key][k]
+
+#pprint.pprint(data_dict[temp])
 '''
 ### Task 2: Remove outliers
 ### Task 3: Create new feature(s)
