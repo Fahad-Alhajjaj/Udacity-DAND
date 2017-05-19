@@ -43,3 +43,35 @@ acc = accuracy_score(pred, labels_test)
 
 print numpy.count_nonzero(pred)
 print acc
+
+counter = 0
+for elem, label in zip(pred, labels_test):
+	if elem == label and elem == 1:
+		counter+=1
+print counter
+
+from sklearn.metrics import precision_score, recall_score
+
+print precision_score(labels_test, pred)
+print recall_score(labels_test, pred)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

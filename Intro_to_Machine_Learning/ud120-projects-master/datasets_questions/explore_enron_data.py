@@ -10,37 +10,45 @@ from feature_format import *
 a = 0
 b = 0
 c = 0
+features = {'salary' : 0,
+			'total_payments' : 0,
+			'exercised_stock_options' : 0,
+			'bonus' : 0,
+			'restricted_stock' : 0,
+			'shared_receipt_with_poi' : 0,
+			'total_stock_value' : 0,
+			'expenses' : 0,
+			'other' : 0,
+			'from_this_person_to_poi' : 0,
+			'deferred_income' : 0,
+			'long_term_incentive' : 0,
+			'from_poi_to_this_person' : 0
+			}
 
+import pprint
 for item in enron_data:
 	for k, v in enron_data[item].items():
 		if k == 'poi':
-			if v:
+			if v == 1:
 				c+=1
-				print enron_data[item]['total_payments']
-				if enron_data[item]['total_payments'] == 'NaN':
-					b+=1
+				for k in features.keys():
+					if enron_data[item][k] != 'NaN':
+						features[k] += 1
+pprint.pprint(features)
+print c
 
-print a, ' | ', b, ' | ', c
 '''
 salary
-to_messages
-deferral_payments
 total_payments
 exercised_stock_options
 bonus
 restricted_stock
 shared_receipt_with_poi
-restricted_stock_deferred
 total_stock_value
 expenses
-loan_advances
-from_messages
 other
 from_this_person_to_poi
-poi
-director_fees
 deferred_income
 long_term_incentive
-email_address
 from_poi_to_this_person
 '''

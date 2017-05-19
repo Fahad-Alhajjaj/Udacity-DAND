@@ -10,12 +10,33 @@ from tester import dump_classifier_and_data
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi','salary'] # You will need to use more features
+features_list = ['poi',
+				'bonus',
+				'other',
+				'salary',
+				'expenses', 
+				'total_payments',
+				'deferred_income',
+				'restricted_stock',
+				'total_stock_value',
+				'long_term_incentive',
+				'exercised_stock_options',
+				'shared_receipt_with_poi',
+				'from_this_person_to_poi',
+				'from_poi_to_this_person'
+				] # You will need to use more features
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
+#import pprint
+
+i=0
+for k in data_dict.keys():
+	i+=1
+print i
+'''
 ### Task 2: Remove outliers
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
@@ -53,3 +74,4 @@ features_train, features_test, labels_train, labels_test = \
 ### generates the necessary .pkl files for validating your results.
 
 dump_classifier_and_data(clf, my_dataset, features_list)
+'''
