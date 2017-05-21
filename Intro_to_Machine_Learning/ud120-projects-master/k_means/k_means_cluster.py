@@ -69,8 +69,6 @@ stock = scale2.fit_transform(eso_arr)
 
 print salary, stock
 
-'''
-
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
