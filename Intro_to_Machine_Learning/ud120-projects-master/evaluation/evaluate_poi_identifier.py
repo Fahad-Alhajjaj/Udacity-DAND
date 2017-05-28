@@ -54,24 +54,3 @@ from sklearn.metrics import precision_score, recall_score
 
 print precision_score(labels_test, pred)
 print recall_score(labels_test, pred)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
