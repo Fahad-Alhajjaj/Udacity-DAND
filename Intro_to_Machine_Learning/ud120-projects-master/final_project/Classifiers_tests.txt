@@ -1,0 +1,17 @@
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='log2', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=9, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+Accuracy: 0.85229       Precision: 0.46000      Recall: 0.19550 F1: 0.27439     F2: 0.22090
+Total predictions: 14000        True positives:  391    False positives:  459   False negatives: 1609       True negatives: 11541
+
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None,
+          learning_rate=1.0, n_estimators=15, random_state=None)
+Accuracy: 0.85200       Precision: 0.47454      Recall: 0.33550 F1: 0.39309     F2: 0.35638
+Total predictions: 14000        True positives:  671    False positives:  743   False negatives: 1329       True negatives: 11257
+
+GaussianNB()
+Accuracy: 0.81721       Precision: 0.36129      Recall: 0.36400 F1: 0.36264     F2: 0.36345
+Total predictions: 14000        True positives:  728    False positives: 1287   False negatives: 1272       True negatives: 10713
