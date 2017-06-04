@@ -1,17 +1,43 @@
-RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
-            max_depth=None, max_features='log2', max_leaf_nodes=None,
-            min_samples_leaf=1, min_samples_split=2,
-            min_weight_fraction_leaf=0.0, n_estimators=9, n_jobs=1,
-            oob_score=False, random_state=None, verbose=0,
-            warm_start=False)
-Accuracy: 0.85229       Precision: 0.46000      Recall: 0.19550 F1: 0.27439     F2: 0.22090
-Total predictions: 14000        True positives:  391    False positives:  459   False negatives: 1609       True negatives: 11541
+Using all features:(salary, deferral_payments, total_payments, loan_advances, bonus, restricted_stock_deferred, deferred_income, total_stock_value, expenses, exercised_stock_options, other, long_term_incentive, restricted_stock, director_fees, to_messages, from_poi_to_this_person, from_messages, from_this_person_to_poi, shared_receipt_with_poi)
+GaussianNB()
+Accuracy: 0.75707       Precision: 0.24462      Recall: 0.33550 F1: 0.28294     F2: 0.31230
+Total predictions: 14000        True positives:  671    False positives: 2072   False negatives: 1329       True negatives: 9928
 
-AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None,
-          learning_rate=1.0, n_estimators=15, random_state=None)
-Accuracy: 0.85200       Precision: 0.47454      Recall: 0.33550 F1: 0.39309     F2: 0.35638
-Total predictions: 14000        True positives:  671    False positives:  743   False negatives: 1329       True negatives: 11257
+Taking out features with many missing values:(salary, total_payments, total_stock_value, expenses, exercised_stock_options, other, restricted_stock, to_messages, from_poi_to_this_person, from_messages, from_this_person_to_poi, shared_receipt_with_poi)
+GaussianNB()
+Accuracy: 0.83321       Precision: 0.36842      Recall: 0.23450 F1: 0.28659     F2: 0.25288
+Total predictions: 14000        True positives:  469    False positives:  804   False negatives: 1531       True negatives: 11196
 
+Taking out features with many missing values and adding new features:(salary, total_payments, total_stock_value, expenses, exercised_stock_options, other, restricted_stock, to_messages, from_poi_to_this_person, from_messages, from_this_person_to_poi, shared_receipt_with_poi, bonus/salary, bonus/total_payments, shared_receipt_with_poi/total_payments, exercised_stock_options/total_stock_value, restricted_stock/total_stock_value, from_this_person_to_poi/to_messages, shared_receipt_with_poi/to_messages)
+GaussianNB()
+Accuracy: 0.83321       Precision: 0.36842      Recall: 0.23450 F1: 0.28659     F2: 0.25288
+Total predictions: 14000        True positives:  469    False positives:  804   False negatives: 1531       True negatives: 11196
+
+Final features used: (salary, deferral_payments, total_payments, deferred_income, total_stock_value, expenses, exercised_stock_options, other, restricted_stock, director_fees, to_messages, from_poi_to_this_person, from_messages, from_this_person_to_poi, shared_receipt_with_poi, bonus/salary, bonus/total_payments, shared_receipt_with_poi/total_payments, exercised_stock_options/total_stock_value, restricted_stock/total_stock_value, from_this_person_to_poi/to_messages, shared_receipt_with_poi/to_messages)
 GaussianNB()
 Accuracy: 0.81721       Precision: 0.36129      Recall: 0.36400 F1: 0.36264     F2: 0.36345
 Total predictions: 14000        True positives:  728    False positives: 1287   False negatives: 1272       True negatives: 10713
+
+###Trying different Classifiers with final features:
+Got a divide by zero when trying out: SVC(C=1000.0, cache_size=200, class_weight='balanced', coef0=0.0, decision_function_shape=None, degree=3, gamma=0.0001, kernel='rbf', max_iter=-1, probability=False, random_state=None, shrinking=True, tol=0.001, verbose=False)
+Precision or recall may be undefined due to a lack of true positive predicitons.
+
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini', max_depth=None, max_features='sqrt', max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=35, min_weight_fraction_leaf=0.0, n_estimators=13, n_jobs=1, oob_score=False, random_state=None, verbose=0, warm_start=False)
+Accuracy: 0.86079       Precision: 0.56174      Recall: 0.11600 F1: 0.19229     F2: 0.13788
+Total predictions: 14000        True positives:  232    False positives:  181   False negatives: 1768       True negatives: 11819
+
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0, n_estimators=9, random_state=None)
+Accuracy: 0.84836       Precision: 0.45468      Recall: 0.30850 F1: 0.36759     F2: 0.32970
+Total predictions: 14000        True positives:  617    False positives:  740   False negatives: 1383       True negatives: 11260
+
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0, n_estimators=13, random_state=None)
+Accuracy: 0.85086       Precision: 0.46871      Recall: 0.32950 F1: 0.38696     F2: 0.35031
+Total predictions: 14000        True positives:  659    False positives:  747   False negatives: 1341       True negatives: 11253
+
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0, n_estimators=21, random_state=None)
+Accuracy: 0.85050       Precision: 0.46835      Recall: 0.34400 F1: 0.39666     F2: 0.36329
+Total predictions: 14000        True positives:  688    False positives:  781   False negatives: 1312       True negatives: 11219
+
+AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0, n_estimators=27, random_state=None)
+Accuracy: 0.84971       Precision: 0.46443      Recall: 0.33950 F1: 0.39226     F2: 0.35880
+Total predictions: 14000        True positives:  679    False positives:  783   False negatives: 1321       True negatives: 11217

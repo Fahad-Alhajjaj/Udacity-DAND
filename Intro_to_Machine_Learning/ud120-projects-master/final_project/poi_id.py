@@ -16,34 +16,31 @@ from sklearn.naive_bayes import GaussianNB
 ### The first feature must be "poi".
 				
 features_list = ['poi',
-				'salary', #~
+				'salary',
 				'deferral_payments',
 				'total_payments',
 				#'loan_advances', ####
-				#'bonus',
-				#'restricted_stock_deferred',
-				'deferred_income', #~
-				'total_stock_value', #~
+				#'bonus', ####
+				#'restricted_stock_deferred', ####
+				'deferred_income',
+				'total_stock_value',
 				'expenses',
 				'exercised_stock_options',
-				'other', ####
+				'other',
 				#'long_term_incentive', ####
 				'restricted_stock',
 				'director_fees',
 				'to_messages',
-				'from_poi_to_this_person', #~
+				'from_poi_to_this_person',
 				'from_messages',
 				'from_this_person_to_poi',
 				'shared_receipt_with_poi',
 				'bonus/salary',
-				'director_fees/deferral_payments',
-				'to_messages/deferral_payments', #~
-				#'from_messages/deferral_payments',
 				'bonus/total_payments',
-				#'shared_receipt_with_poi/total_payments', #~
+				'shared_receipt_with_poi/total_payments',
 				'exercised_stock_options/total_stock_value',
 				'restricted_stock/total_stock_value',
-				'from_this_person_to_poi/to_messages', #~
+				'from_this_person_to_poi/to_messages',
 				'shared_receipt_with_poi/to_messages',
 				] # You will need to use more features
 
@@ -103,23 +100,11 @@ def new_features(numerator, denumerator, key, data_dict):
 
 for key in data_dict.keys():
 	data_dict = new_features('bonus', 'salary', key, data_dict)
-
-	data_dict = new_features('director_fees', 'deferral_payments', key, data_dict)
-
-	data_dict = new_features('to_messages', 'deferral_payments', key, data_dict)
-
-	data_dict = new_features('from_messages', 'deferral_payments', key, data_dict)
-
 	data_dict = new_features('bonus', 'total_payments', key, data_dict)
-
 	data_dict = new_features('shared_receipt_with_poi', 'total_payments', key, data_dict)
-	
 	data_dict = new_features('exercised_stock_options', 'total_stock_value', key, data_dict)
-	
 	data_dict = new_features('restricted_stock', 'total_stock_value', key, data_dict)
-	
 	data_dict = new_features('from_this_person_to_poi', 'to_messages', key, data_dict)
-	
 	data_dict = new_features('shared_receipt_with_poi', 'to_messages', key, data_dict)
 
 '''
@@ -158,12 +143,16 @@ print 'Precision: ', precision
 ### function. Because of the small size of the dataset, the script uses
 ### stratified shuffle split cross validation. For more info: 
 ### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
+from sklearn.ensemble import RandomForestClassifier as RFC
+from sklearn.grid_search import GridSearchCV
+from sklearn.svm import SVC
 
-# Example starting point. Try investigating other evaluation techniques!
 features_train, features_test, labels_train, labels_test = \
-    train_test_split(features, labels, test_size=0.1, random_state=42)
+	cross_validation.train_test_split(features, labels, test_size=0.1, random_state=42)
 
-clf = ABC(n_estimators=15)
+clf = ABC(algorithm='SAMME.R', base_estimator=None,
+          learning_rate=1.0, n_estimators=27, random_state=None)
+
 clf.fit(features_train, labels_train) #fitting the data
 
 pred = clf.predict(features_test)
@@ -174,7 +163,6 @@ precision = precision_score(labels_test, pred)
 print 'Accuracy:  ', acc
 print 'Recall:    ', recall
 print 'Precision: ', precision
-
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
 ### that the version of poi_id.py that you submit can be run on its own and
