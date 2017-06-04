@@ -52,7 +52,35 @@ with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
 data_dict.pop('TOTAL', 0)
-
+temp = {'bonus': 0,
+		'deferral_payments': 0,
+		'deferred_income': 0,
+		'director_fees': 0,
+		'email_address': 0,
+		'exercised_stock_options': 0,
+		'expenses': 0,
+		'from_messages': 0,
+		'from_poi_to_this_person': 0,
+		'from_this_person_to_poi': 0,
+		'loan_advances': 0,
+		'long_term_incentive': 0,
+		'other': 0,
+		'poi': 0,
+		'restricted_stock': 0,
+		'restricted_stock_deferred': 0,
+		'salary': 0,
+		'shared_receipt_with_poi': 0,
+		'to_messages': 0,
+		'total_payments': 0,
+		'total_stock_value': 0
+		}
+for key in data_dict.keys():
+	for val in temp.keys():
+		if data_dict[key][val] == 'NaN' and data_dict[key]['poi'] == False:
+			temp[val] += 1
+import pprint
+pprint.pprint(temp)
+'''
 ### Task 2: Remove outliers
 keys_outliers = ['FREVERT MARK A',
 				'BHATNAGAR SANJAY',
@@ -62,7 +90,7 @@ keys_outliers = ['FREVERT MARK A',
 				]
 for val in keys_outliers:
 	del data_dict[val]
-
+'''
 ### Task 3: Create new feature(s)
 def new_features(numerator, denumerator, key, data_dict):
 	new_key = numerator + '/' + denumerator
@@ -94,6 +122,7 @@ for key in data_dict.keys():
 	
 	data_dict = new_features('shared_receipt_with_poi', 'to_messages', key, data_dict)
 
+'''
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
 
@@ -152,3 +181,4 @@ print 'Precision: ', precision
 ### generates the necessary .pkl files for validating your results.
 
 dump_classifier_and_data(clf, my_dataset, features_list)
+'''
