@@ -128,7 +128,8 @@ param_grid = {
           }
 clf = GridSearchCV(ABC(), param_grid)
 '''
-
+#The parameters are hardcoded because when leaving the GridSearchCV and testing with
+#tester.py scores are low, but when hardcoded they are high as expected.
 clf = ABC(algorithm='SAMME.R', base_estimator=None,
           learning_rate=1.0, n_estimators=23, random_state=None)
 
