@@ -19,15 +19,11 @@ features_list = ['poi',
 				'salary',
 				'deferral_payments',
 				'total_payments',
-				#'loan_advances', ####
-				#'bonus', ####
-				#'restricted_stock_deferred', ####
 				'deferred_income',
 				'total_stock_value',
 				'expenses',
 				'exercised_stock_options',
 				'other',
-				#'long_term_incentive', ####
 				'restricted_stock',
 				'director_fees',
 				'to_messages',
@@ -48,8 +44,6 @@ features_list = ['poi',
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
-print len(data_dict.keys())
-"""
 data_dict.pop('TOTAL', 0) #Remove the total record before doing any thing
 
 ### Task 2: Remove outliers
@@ -120,17 +114,18 @@ print 'Precision: ', precision
 
 features_train, features_test, labels_train, labels_test = \
 	cross_validation.train_test_split(features, labels, test_size=0.1, random_state=42)
-'''
+
 '''
 from sklearn.grid_search import GridSearchCV
 
-#Using param_grid and GridSearchCV to tune the algorithm's parameters
+Using param_grid and GridSearchCV to tune the algorithm's parameters
 param_grid = {
 			'n_estimators': [3, 7, 9, 11, 15, 21, 23, 27],
           }
 clf = GridSearchCV(ABC(), param_grid)
 '''
-
+#The parameters are hardcoded because when leaving the GridSearchCV and testing with
+#tester.py scores are low, but when hardcoded they are high as expected.
 clf = ABC(algorithm='SAMME.R', base_estimator=None,
           learning_rate=1.0, n_estimators=23, random_state=None)
 
@@ -153,4 +148,3 @@ print 'Precision: ', precision
 ### generates the necessary .pkl files for validating your results.
 
 dump_classifier_and_data(clf, my_dataset, features_list)
-"""
