@@ -19,15 +19,11 @@ features_list = ['poi',
 				'salary',
 				'deferral_payments',
 				'total_payments',
-				#'loan_advances', ####
-				#'bonus', ####
-				#'restricted_stock_deferred', ####
 				'deferred_income',
 				'total_stock_value',
 				'expenses',
 				'exercised_stock_options',
 				'other',
-				#'long_term_incentive', ####
 				'restricted_stock',
 				'director_fees',
 				'to_messages',
@@ -35,15 +31,8 @@ features_list = ['poi',
 				'from_messages',
 				'from_this_person_to_poi',
 				'shared_receipt_with_poi',
-				'bonus/salary',
-				'bonus/total_payments',
-				'shared_receipt_with_poi/total_payments',
-				'exercised_stock_options/total_stock_value',
-				'restricted_stock/total_stock_value',
-				'from_this_person_to_poi/to_messages',
-				'shared_receipt_with_poi/to_messages',
+				'shared_receipt_with_poi/to_messages'
 				] # You will need to use more features
-
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
@@ -55,7 +44,9 @@ keys_outliers = ['FREVERT MARK A', #deferral_payments outlier
 				'BHATNAGAR SANJAY', #restricted_stock_deferred outlier
 				'LAVORATO JOHN J', #bonus and from_poi_to_this_person outlier
 				'MARTIN AMANDA K', #long_term_incentive outlier
-				'KAMINSKI WINCENTY J' #from_messages outlier
+				'KAMINSKI WINCENTY J', #from_messages outlier
+				'LOCKHART EUGENE E', #all of its values missing, 'NaN'
+				'THE TRAVEL AGENCY IN THE PARK' # Not a real person
 				]
 for val in keys_outliers:
 	del data_dict[val]
@@ -72,12 +63,6 @@ def new_features(numerator, denumerator, key, data_dict):
 	return data_dict
 
 for key in data_dict.keys():
-	data_dict = new_features('bonus', 'salary', key, data_dict)
-	data_dict = new_features('bonus', 'total_payments', key, data_dict)
-	data_dict = new_features('shared_receipt_with_poi', 'total_payments', key, data_dict)
-	data_dict = new_features('exercised_stock_options', 'total_stock_value', key, data_dict)
-	data_dict = new_features('restricted_stock', 'total_stock_value', key, data_dict)
-	data_dict = new_features('from_this_person_to_poi', 'to_messages', key, data_dict)
 	data_dict = new_features('shared_receipt_with_poi', 'to_messages', key, data_dict)
 
 ### Store to my_dataset for easy export below.
@@ -88,8 +73,21 @@ data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 
 ### Task 4: Try a varity of classifiers
-from sklearn import cross_validation
-X_train, X_test, y_train, y_test = cross_validation.train_test_split(features, labels, test_size=0.1, random_state=42)
+from sklearn.cross_validation import StratifiedShuffleSplit
+
+cv_sss = StratifiedShuffleSplit(labels, n_iter= 1000, random_state = 42)
+
+for train_index, test_index in cv_sss: 
+    X_train = []
+    X_test  = []
+    y_train = []
+    y_test  = []
+    for i in train_index:
+        X_train.append(features[i])
+        y_train.append(labels[i])
+    for j in test_index:
+        X_test.append(features[j])
+        y_test.append(labels[j])
 
 ### Please name your classifier clf for easy export below.
 ### Note that if you want to do PCA or other multi-stage operations,
@@ -116,9 +114,6 @@ print 'Precision: ', precision
 ### stratified shuffle split cross validation. For more info: 
 ### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
 
-features_train, features_test, labels_train, labels_test = \
-	cross_validation.train_test_split(features, labels, test_size=0.1, random_state=42)
-
 '''
 from sklearn.grid_search import GridSearchCV
 
@@ -133,15 +128,15 @@ clf = GridSearchCV(ABC(), param_grid)
 clf = ABC(algorithm='SAMME.R', base_estimator=None,
           learning_rate=1.0, n_estimators=23, random_state=None)
 
-clf.fit(features_train, labels_train) #fitting the data
+clf.fit(X_train, y_train) #fitting the data
 '''
 print "Best estimator found by grid search:"
 print clf.best_estimator_
 '''
-pred = clf.predict(features_test)
-acc = accuracy_score(pred, labels_test)
-recall = recall_score(labels_test, pred)
-precision = precision_score(labels_test, pred)
+pred = clf.predict(X_test)
+acc = accuracy_score(pred, y_test)
+recall = recall_score(y_test, pred)
+precision = precision_score(y_test, pred)
 
 print 'Accuracy:  ', acc
 print 'Recall:    ', recall
