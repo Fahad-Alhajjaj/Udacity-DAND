@@ -2,6 +2,10 @@
 
 import sys
 import pickle
+<<<<<<< HEAD
+=======
+sys.path.append("../tools/")
+>>>>>>> origin/master
 
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
@@ -30,6 +34,7 @@ features_list = ['poi',
 				'from_messages',
 				'from_this_person_to_poi',
 				'shared_receipt_with_poi',
+<<<<<<< HEAD
 				'bonus/salary',
 				'bonus/total_payments',
 				'shared_receipt_with_poi/total_payments',
@@ -39,6 +44,10 @@ features_list = ['poi',
 				'shared_receipt_with_poi/to_messages',
 				] # You will need to use more features
 
+=======
+				'shared_receipt_with_poi/to_messages'
+				] # You will need to use more features
+>>>>>>> origin/master
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
@@ -51,12 +60,21 @@ keys_outliers = ['FREVERT MARK A', #deferral_payments outlier
 				'LAVORATO JOHN J', #bonus and from_poi_to_this_person outlier
 				'MARTIN AMANDA K', #long_term_incentive outlier
 				'KAMINSKI WINCENTY J', #from_messages outlier
+<<<<<<< HEAD
 				'THE TRAVEL AGENCY IN THE PARK', #Not a real person
 				'LOCKHART EUGENE E' #All of his/her values are missing "NaN"
 				]
 for val in keys_outliers:
 	del data_dict[val]
 			
+=======
+				'LOCKHART EUGENE E', #all of its values missing, 'NaN'
+				'THE TRAVEL AGENCY IN THE PARK' # Not a real person
+				]
+for val in keys_outliers:
+	del data_dict[val]
+
+>>>>>>> origin/master
 ### Task 3: Create new feature(s)
 #creating new feature by dividing one value by another.
 def new_features(numerator, denumerator, key, data_dict):
@@ -69,12 +87,15 @@ def new_features(numerator, denumerator, key, data_dict):
 	return data_dict
 
 for key in data_dict.keys():
+<<<<<<< HEAD
 	data_dict = new_features('bonus', 'salary', key, data_dict)
 	data_dict = new_features('bonus', 'total_payments', key, data_dict)
 	data_dict = new_features('shared_receipt_with_poi', 'total_payments', key, data_dict)
 	data_dict = new_features('exercised_stock_options', 'total_stock_value', key, data_dict)
 	data_dict = new_features('restricted_stock', 'total_stock_value', key, data_dict)
 	data_dict = new_features('from_this_person_to_poi', 'to_messages', key, data_dict)
+=======
+>>>>>>> origin/master
 	data_dict = new_features('shared_receipt_with_poi', 'to_messages', key, data_dict)
 
 ### Store to my_dataset for easy export below.
@@ -87,6 +108,7 @@ labels, features = targetFeatureSplit(data)
 ### Task 4: Try a varity of classifiers
 from sklearn.cross_validation import StratifiedShuffleSplit
 
+<<<<<<< HEAD
 cv_sss = StratifiedShuffleSplit(labels, n_iter=200, random_state = 42)
 for train_index, test_index in cv_sss: 
     X_train = []
@@ -99,6 +121,21 @@ for train_index, test_index in cv_sss:
     for j in test_index:
         X_test.append( features[j] )
         y_test.append( labels[j] )
+=======
+cv_sss = StratifiedShuffleSplit(labels, n_iter= 1000, random_state = 42)
+
+for train_index, test_index in cv_sss: 
+    X_train = []
+    X_test  = []
+    y_train = []
+    y_test  = []
+    for i in train_index:
+        X_train.append(features[i])
+        y_train.append(labels[i])
+    for j in test_index:
+        X_test.append(features[j])
+        y_test.append(labels[j])
+>>>>>>> origin/master
 
 ### Please name your classifier clf for easy export below.
 ### Note that if you want to do PCA or other multi-stage operations,
@@ -157,4 +194,8 @@ print 'Precision: ', precision
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
 
+<<<<<<< HEAD
 dump_classifier_and_data(clf, my_dataset, features_list)
+=======
+dump_classifier_and_data(clf, my_dataset, features_list)
+>>>>>>> origin/master
